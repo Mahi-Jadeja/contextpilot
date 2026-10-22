@@ -1,0 +1,175 @@
+filename,chart_type,query_intent,relevant_tables,description
+bar_analytical_52af660c.png,bar,analytical,order_items|products|returns,What is the return rate for each product category?
+bar_factual_935244b7.png,bar,factual,orders,How many orders are in each status?
+bar_factual_3492b6d0.png,bar,factual,orders,How many orders are in each status?
+bar_factual_caaf77e7.png,bar,factual,orders,How many orders are in each status?
+bar_factual_9e5d6f52.png,bar,factual,orders,How many orders are in each status?
+bar_factual_db402fb2.png,bar,factual,orders,How many orders are in each status?
+bar_analytical_6a7a3a8f.png,bar,analytical,order_items|products|orders,Which product category generates the most revenue?
+bar_analytical_f9b5f71d.png,bar,analytical,order_items|products|orders,Which product category generates the most revenue?
+bar_analytical_6ec38451.png,bar,analytical,order_items|products|orders,Which product category generates the most revenue?
+bar_analytical_5bfdd5c6.png,bar,analytical,order_items|products|orders,Which product category generates the most revenue?
+bar_analytical_121cf671.png,bar,analytical,order_items|products|orders,Which product category generates the most revenue?
+bar_factual_7bf5fe95.png,bar,factual,orders,What is the distribution of payment modes?
+bar_factual_3a3daa04.png,bar,factual,orders,What is the distribution of payment modes?
+bar_factual_07735790.png,bar,factual,orders,What is the distribution of payment modes?
+bar_factual_8c8abffc.png,bar,factual,orders,What is the distribution of payment modes?
+bar_factual_8b851e6e.png,bar,factual,orders,What is the distribution of payment modes?
+bar_factual_35a4654f.png,bar,factual,returns,What are the most common reasons for returns?
+bar_factual_b3935fe0.png,bar,factual,returns,What are the most common reasons for returns?
+bar_factual_c2d237ab.png,bar,factual,returns,What are the most common reasons for returns?
+bar_factual_f12076a5.png,bar,factual,returns,What are the most common reasons for returns?
+bar_factual_18b6a7c5.png,bar,factual,returns,What are the most common reasons for returns?
+bar_factual_07bc245a.png,bar,factual,sellers,How many sellers are of each type?
+bar_factual_f7eeb60a.png,bar,factual,sellers,How many sellers are of each type?
+bar_factual_f0dcca4a.png,bar,factual,sellers,How many sellers are of each type?
+bar_analytical_99c2a8a2.png,bar,analytical,order_items|products,Which sub-categories have the highest order volume?
+bar_analytical_8fb1b69c.png,bar,analytical,order_items|products,Which sub-categories have the highest order volume?
+bar_analytical_e673adf2.png,bar,analytical,order_items|products,Which sub-categories have the highest order volume?
+bar_analytical_e7b5d51d.png,bar,analytical,order_items|products,Which sub-categories have the highest order volume?
+bar_factual_c1ae1f00.png,bar,factual,customers,How many customers are in each loyalty tier?
+bar_factual_25a55499.png,bar,factual,customers,How many customers are in each loyalty tier?
+bar_factual_0d0ae5e9.png,bar,factual,customers,How many customers are in each loyalty tier?
+hbar_analytical_66c0a520.png,hbar,analytical,order_items|sellers,Who are the top 5 sellers by revenue?
+hbar_analytical_99c5ce8e.png,hbar,analytical,order_items|sellers,Who are the top 5 sellers by revenue?
+hbar_analytical_5ec8ca96.png,hbar,analytical,order_items|sellers,Who are the top 5 sellers by revenue?
+hbar_analytical_e4f4c512.png,hbar,analytical,order_items|sellers,Who are the top 10 sellers by revenue?
+hbar_analytical_c04f2f6a.png,hbar,analytical,order_items|sellers,Who are the top 10 sellers by revenue?
+hbar_analytical_1c4561c9.png,hbar,analytical,order_items|sellers,Who are the top 10 sellers by revenue?
+hbar_analytical_2ae621a6.png,hbar,analytical,order_items|sellers,Who are the top 15 sellers by revenue?
+hbar_analytical_f9936c85.png,hbar,analytical,order_items|sellers,Who are the top 15 sellers by revenue?
+hbar_analytical_5f24ad6e.png,hbar,analytical,order_items|sellers,Who are the top 15 sellers by revenue?
+hbar_analytical_8e87d003.png,hbar,analytical,order_items|products,Which are the top 5 products by units sold?
+hbar_analytical_e985f498.png,hbar,analytical,order_items|products,Which are the top 5 products by units sold?
+hbar_analytical_400e1930.png,hbar,analytical,order_items|products,Which are the top 5 products by units sold?
+hbar_analytical_66639396.png,hbar,analytical,order_items|products,Which are the top 10 products by units sold?
+hbar_analytical_749e97e1.png,hbar,analytical,order_items|products,Which are the top 10 products by units sold?
+hbar_analytical_b89d5eb6.png,hbar,analytical,order_items|products,Which are the top 10 products by units sold?
+hbar_comparative_6e4c013e.png,hbar,comparative,order_items|sellers|returns|products,Which seller region has the highest return rate?
+hbar_comparative_f08dbe36.png,hbar,comparative,order_items|sellers|returns|products,Which seller region has the highest return rate?
+hbar_comparative_da9336d4.png,hbar,comparative,order_items|sellers|returns|products,Which seller region has the highest return rate?
+hbar_comparative_59bdda84.png,hbar,comparative,order_items|sellers|returns|products,Which seller region has the highest return rate?
+line_analytical_974e8cb5.png,line,analytical,orders,What is the weekly revenue trend over time?
+line_analytical_dded96e9.png,line,analytical,orders,What is the weekly revenue trend over time?
+line_analytical_960cbad7.png,line,analytical,orders,What is the weekly revenue trend over time?
+line_analytical_b23308dc.png,line,analytical,orders,What is the weekly revenue trend over time?
+line_analytical_6168e4cf.png,line,analytical,orders,What is the weekly revenue trend over time?
+line_analytical_04e86f0c.png,line,analytical,orders,What is the weekly revenue trend over time?
+line_analytical_c77f420d.png,line,analytical,orders,What is the weekly revenue trend over time?
+line_analytical_af1dad67.png,line,analytical,orders,What is the weekly revenue trend over time?
+line_analytical_c82eff04.png,line,analytical,order_items|products|orders,How has order volume changed per category over months?
+line_analytical_2588ecfa.png,line,analytical,order_items|products|orders,How has order volume changed per category over months?
+line_analytical_c42711ca.png,line,analytical,order_items|products|orders,How has order volume changed per category over months?
+line_analytical_bc158921.png,line,analytical,order_items|products|orders,How has order volume changed per category over months?
+line_analytical_a678d0af.png,line,analytical,order_items|products|orders,How has order volume changed per category over months?
+line_analytical_4013db95.png,line,analytical,order_items|products|orders,How has order volume changed per category over months?
+line_analytical_a8a4d76a.png,line,analytical,orders,What is the cumulative revenue trend?
+line_analytical_40e9ad27.png,line,analytical,orders,What is the cumulative revenue trend?
+line_analytical_fef27110.png,line,analytical,orders,What is the cumulative revenue trend?
+line_analytical_324bbf8d.png,line,analytical,orders,What is the cumulative revenue trend?
+line_analytical_975b5103.png,line,analytical,orders,What is the cumulative revenue trend?
+line_analytical_a5952bad.png,line,analytical,returns,How has the weekly return volume changed over time?
+line_analytical_666431e4.png,line,analytical,returns,How has the weekly return volume changed over time?
+line_analytical_127dd26f.png,line,analytical,returns,How has the weekly return volume changed over time?
+line_analytical_e6d3b957.png,line,analytical,returns,How has the weekly return volume changed over time?
+line_analytical_c27539fe.png,line,analytical,returns,How has the weekly return volume changed over time?
+pie_factual_534d952f.png,pie,factual,customers,What is the city-tier split of customers?
+pie_factual_029c9ff7.png,pie,factual,customers,What is the city-tier split of customers?
+pie_factual_704ce191.png,pie,factual,customers,What is the city-tier split of customers?
+pie_factual_f7812429.png,pie,factual,customers,What is the city-tier split of customers?
+pie_factual_0e04e84d.png,pie,factual,customers,What is the city-tier split of customers?
+pie_factual_f5162563.png,pie,factual,customers,What percentage of customers are in each loyalty tier?
+pie_factual_820a1d90.png,pie,factual,customers,What percentage of customers are in each loyalty tier?
+pie_factual_a5961a25.png,pie,factual,customers,What percentage of customers are in each loyalty tier?
+pie_factual_18ed2bc0.png,pie,factual,customers,What percentage of customers are in each loyalty tier?
+pie_factual_99bd8675.png,pie,factual,customers,What percentage of customers are in each loyalty tier?
+pie_factual_c7415cf2.png,pie,factual,orders,What is the COD vs prepaid split for orders?
+pie_factual_a0f0e9e3.png,pie,factual,orders,What is the COD vs prepaid split for orders?
+pie_factual_0ab83526.png,pie,factual,orders,What is the COD vs prepaid split for orders?
+pie_factual_93ca698c.png,pie,factual,orders,What is the COD vs prepaid split for orders?
+pie_factual_6130a52a.png,pie,factual,orders,What is the COD vs prepaid split for orders?
+pie_factual_734d11a3.png,pie,factual,orders,What share of orders are delivered vs cancelled?
+pie_factual_6da3ef27.png,pie,factual,orders,What share of orders are delivered vs cancelled?
+pie_factual_e4d1a14a.png,pie,factual,orders,What share of orders are delivered vs cancelled?
+pie_factual_f4bc18f2.png,pie,factual,orders,What share of orders are delivered vs cancelled?
+pie_factual_398c53f0.png,pie,factual,orders,What share of orders are delivered vs cancelled?
+pie_factual_eba5367e.png,pie,factual,sellers,What types of sellers exist on the platform?
+pie_factual_83d8ada3.png,pie,factual,sellers,What types of sellers exist on the platform?
+pie_factual_f63d7d14.png,pie,factual,sellers,What types of sellers exist on the platform?
+pie_factual_1c60fb29.png,pie,factual,sellers,What types of sellers exist on the platform?
+pie_factual_d78ab565.png,pie,factual,sellers,What types of sellers exist on the platform?
+pie_factual_ee1242db.png,pie,factual,sellers,Which regions have the most sellers?
+pie_factual_fc5b64ac.png,pie,factual,sellers,Which regions have the most sellers?
+pie_factual_19294300.png,pie,factual,sellers,Which regions have the most sellers?
+pie_factual_2fc7e739.png,pie,factual,sellers,Which regions have the most sellers?
+pie_factual_46085af9.png,pie,factual,products,How is the product catalog distributed across categories?
+pie_factual_60e6a6b3.png,pie,factual,products,How is the product catalog distributed across categories?
+pie_factual_1aa2bda5.png,pie,factual,products,How is the product catalog distributed across categories?
+pie_factual_5a86bf27.png,pie,factual,products,How is the product catalog distributed across categories?
+pie_factual_fe326ad5.png,pie,factual,products,How is the product catalog distributed across categories?
+pie_factual_da526266.png,pie,factual,customers,What payment method do customers prefer?
+pie_factual_a2d2783f.png,pie,factual,customers,What payment method do customers prefer?
+pie_factual_8576c9c4.png,pie,factual,customers,What payment method do customers prefer?
+pie_factual_f25f960f.png,pie,factual,customers,What payment method do customers prefer?
+pie_factual_61080070.png,pie,factual,customers,What payment method do customers prefer?
+heatmap_comparative_09b8a300.png,heatmap,comparative,order_items|products|returns|sellers,How does return rate vary across category and seller type?
+heatmap_comparative_9d5651ab.png,heatmap,comparative,order_items|products|returns|sellers,How does return rate vary across category and seller type?
+heatmap_comparative_3857a2e5.png,heatmap,comparative,order_items|products|returns|sellers,How does return rate vary across category and seller type?
+heatmap_comparative_753df745.png,heatmap,comparative,order_items|products|returns|sellers,How does return rate vary across category and seller type?
+heatmap_comparative_b2eb7f4f.png,heatmap,comparative,orders,Does payment mode affect order status (cancellation/delivery)?
+heatmap_comparative_52928fce.png,heatmap,comparative,orders,Does payment mode affect order status (cancellation/delivery)?
+heatmap_comparative_09c86565.png,heatmap,comparative,orders,Does payment mode affect order status (cancellation/delivery)?
+heatmap_comparative_465e4640.png,heatmap,comparative,orders,Does payment mode affect order status (cancellation/delivery)?
+heatmap_analytical_56b0ab2a.png,heatmap,analytical,shipments|warehouses,Which warehouse has the most delayed shipments?
+heatmap_analytical_e06371ac.png,heatmap,analytical,shipments|warehouses,Which warehouse has the most delayed shipments?
+heatmap_analytical_3b1cef41.png,heatmap,analytical,shipments|warehouses,Which warehouse has the most delayed shipments?
+heatmap_analytical_2230b78c.png,heatmap,analytical,shipments|warehouses,Which warehouse has the most delayed shipments?
+heatmap_comparative_e8a0d413.png,heatmap,comparative,order_items|products|orders|customers,Which loyalty tier buys which categories the most?
+heatmap_comparative_355d0dde.png,heatmap,comparative,order_items|products|orders|customers,Which loyalty tier buys which categories the most?
+heatmap_comparative_9b0b8c79.png,heatmap,comparative,order_items|products|orders|customers,Which loyalty tier buys which categories the most?
+scatter_analytical_6d506ac9.png,scatter,analytical,products,What is the discount spread across product categories?
+scatter_analytical_1addd9c3.png,scatter,analytical,products,What is the discount spread across product categories?
+scatter_analytical_bf1f0be2.png,scatter,analytical,products,What is the discount spread across product categories?
+scatter_analytical_79331510.png,scatter,analytical,products,What is the discount spread across product categories?
+scatter_analytical_c92d22cd.png,scatter,analytical,products,What is the discount spread across product categories?
+scatter_analytical_0550e5cc.png,scatter,analytical,products,What is the discount spread across product categories?
+scatter_comparative_1c19c85c.png,scatter,comparative,customers|orders,Are high-risk customers placing more or fewer orders?
+scatter_comparative_fae07ec8.png,scatter,comparative,customers|orders,Are high-risk customers placing more or fewer orders?
+scatter_comparative_e5268cbc.png,scatter,comparative,customers|orders,Are high-risk customers placing more or fewer orders?
+scatter_comparative_4d690b31.png,scatter,comparative,customers|orders,Are high-risk customers placing more or fewer orders?
+scatter_comparative_d7c20d82.png,scatter,comparative,customers|orders,Are high-risk customers placing more or fewer orders?
+scatter_analytical_4277960b.png,scatter,analytical,order_items|sellers,Do higher-rated sellers earn more revenue per order?
+scatter_analytical_a5f7a020.png,scatter,analytical,order_items|sellers,Do higher-rated sellers earn more revenue per order?
+scatter_analytical_ab346dd9.png,scatter,analytical,order_items|sellers,Do higher-rated sellers earn more revenue per order?
+scatter_analytical_a8aa39e9.png,scatter,analytical,order_items|sellers,Do higher-rated sellers earn more revenue per order?
+scatter_analytical_4cbcadb9.png,scatter,analytical,order_items|sellers,Do higher-rated sellers earn more revenue per order?
+scatter_analytical_f11d649c.png,scatter,analytical,orders|order_items,Do larger orders (more items) have higher value?
+scatter_analytical_4ce05b5a.png,scatter,analytical,orders|order_items,Do larger orders (more items) have higher value?
+scatter_analytical_65ecae10.png,scatter,analytical,orders|order_items,Do larger orders (more items) have higher value?
+scatter_analytical_6ad439f2.png,scatter,analytical,orders|order_items,Do larger orders (more items) have higher value?
+bar_comparative_beb6fd25.png,bar,comparative,orders,Are COD customers more likely to cancel orders than prepaid?
+bar_comparative_d43875a6.png,bar,comparative,orders,Are COD customers more likely to cancel orders than prepaid?
+bar_comparative_6183fdec.png,bar,comparative,orders,Are COD customers more likely to cancel orders than prepaid?
+bar_comparative_7da0ca81.png,bar,comparative,orders,Are COD customers more likely to cancel orders than prepaid?
+bar_comparative_4ce9f84f.png,bar,comparative,orders,Are COD customers more likely to cancel orders than prepaid?
+bar_comparative_8b80ecc6.png,bar,comparative,orders|customers,Do Tier-1 city customers spend more per order than Tier-2 or Tier-3?
+bar_comparative_345e3aa3.png,bar,comparative,orders|customers,Do Tier-1 city customers spend more per order than Tier-2 or Tier-3?
+bar_comparative_1ab362dc.png,bar,comparative,orders|customers,Do Tier-1 city customers spend more per order than Tier-2 or Tier-3?
+bar_comparative_1ec3540e.png,bar,comparative,orders|customers,Do Tier-1 city customers spend more per order than Tier-2 or Tier-3?
+bar_comparative_8906c747.png,bar,comparative,orders|customers,Do Tier-1 city customers spend more per order than Tier-2 or Tier-3?
+bar_factual_a484a801.png,bar,factual,refunds,What is the most common refund method?
+bar_factual_cf2231fb.png,bar,factual,refunds,What is the most common refund method?
+bar_factual_4cf32bb0.png,bar,factual,refunds,What is the most common refund method?
+bar_factual_12612589.png,bar,factual,refunds,What is the most common refund method?
+bar_factual_da0352d2.png,bar,factual,seller_settlements,What percentage of seller settlements are pending?
+bar_factual_9136432a.png,bar,factual,seller_settlements,What percentage of seller settlements are pending?
+bar_factual_32e57b90.png,bar,factual,seller_settlements,What percentage of seller settlements are pending?
+bar_factual_946b17b0.png,bar,factual,seller_settlements,What percentage of seller settlements are pending?
+bar_factual_d81ff373.png,bar,factual,inventory,What is the distribution of available inventory quantities?
+bar_factual_e5cab265.png,bar,factual,inventory,What is the distribution of available inventory quantities?
+bar_factual_0851432e.png,bar,factual,inventory,What is the distribution of available inventory quantities?
+bar_factual_6138434d.png,bar,factual,inventory,What is the distribution of available inventory quantities?
+bar_analytical_66d431be.png,bar,analytical,products|order_items|returns,Do heavily discounted products get returned more often?
+bar_analytical_d64685ee.png,bar,analytical,products|order_items|returns,Do heavily discounted products get returned more often?
+bar_analytical_47a47d02.png,bar,analytical,products|order_items|returns,Do heavily discounted products get returned more often?
+bar_analytical_632ee668.png,bar,analytical,products|order_items|returns,Do heavily discounted products get returned more often?
