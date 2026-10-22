@@ -10,7 +10,7 @@ DATA_DIR = ROOT_DIR / "data"
 CHARTS_DIR = DATA_DIR / "charts"
 METADATA_DIR = DATA_DIR / "metadata"
 CHART_METADATA_CSV = METADATA_DIR / "chart_metadata.csv"
-QUERY_CONTEXT_CSV = METADATA_DIR / "query_context_data.csv"
+QUERY_TRIPLETS_CSV = METADATA_DIR / "query_context_triplets.csv"
 
 CACHE_DIR = ROOT_DIR / "cache"
 EMBEDDINGS_DIR = CACHE_DIR / "embeddings"
