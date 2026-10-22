@@ -1,7 +1,16 @@
 """
 CLIP Embedding Module for ContextPilot.
 Provides dual text and vision embedding generation mapped into a shared 512-d space.
+Configured with single-threaded execution env flags for macOS stability.
 """
+import os
+# Force single-thread execution to prevent macOS OpenMP/FAISS thread segfaults
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["MKL_NUM_THREADS"] = "1"
+os.environ["OPENBLAS_NUM_THREADS"] = "1"
+os.environ["VECLIB_MAXIMUM_THREADS"] = "1"
+os.environ["NUMEXPR_NUM_THREADS"] = "1"
+
 from pathlib import Path
 from typing import List, Union
 
@@ -12,10 +21,12 @@ from transformers import CLIPModel, CLIPProcessor
 
 from app.core.config import CLIP_EMBED_DIM, CLIP_MODEL_ID
 
-# Module-level cache for singleton model loading
+# Set torch threads to single-threaded for stability
+torch.set_num_threads(1)
+
 _MODEL = None
 _PROCESSOR = None
-_DEVICE = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
+_DEVICE = "cpu"
 
 
 def get_clip_model_and_processor():
@@ -57,7 +68,6 @@ def encode_text(text: Union[str, List[str]]) -> np.ndarray:
     with torch.no_grad():
         out = model.get_text_features(**inputs)
         text_features = _extract_tensor(out, "text_embeds")
-        # L2 Normalize vectors
         text_features = text_features / text_features.norm(p=2, dim=-1, keepdim=True)
 
     arr = text_features.cpu().numpy().astype(np.float32)
@@ -93,8 +103,10 @@ def encode_image(image_input: Union[str, Path, Image.Image, List[Union[str, Path
     with torch.no_grad():
         out = model.get_image_features(**inputs)
         image_features = _extract_tensor(out, "image_embeds")
-        # L2 Normalize vectors
         image_features = image_features / image_features.norm(p=2, dim=-1, keepdim=True)
+
+    for img in pil_images:
+        img.close()
 
     arr = image_features.cpu().numpy().astype(np.float32)
     return arr
