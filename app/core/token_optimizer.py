@@ -2,8 +2,8 @@
 Token Optimizer module for ContextPilot.
 Estimates token counts via tiktoken and selects chart context summaries to fit strict token budgets.
 """
-from dataclasses import dataclass, field
-from typing import List
+from dataclasses import dataclass
+from typing import List, Tuple
 
 import tiktoken
 
@@ -51,6 +51,16 @@ def build_system_prompt() -> str:
     )
 
 
+def _format_full_prompt(system_prompt: str, base_user_prompt: str, summaries_text: str) -> Tuple[str, str]:
+    """Helper to format user_prompt and full_prompt_text identically."""
+    user_prompt = (
+        f"{base_user_prompt}{summaries_text}\n"
+        f"Provide a clear, grounded answer to the query based on the chart context above."
+    )
+    full_prompt_text = f"SYSTEM:\n{system_prompt}\n\nUSER:\n{user_prompt}"
+    return user_prompt, full_prompt_text
+
+
 def pack_context_within_budget(
     query: str,
     candidates: List[FusedCandidate],
@@ -68,28 +78,22 @@ def pack_context_within_budget(
     current_summaries_text = ""
 
     for cand in candidates:
-        summary_text = f"--- Chart #{cand.rank} ---\n{cand.build_summary()}\n\n"
-        candidate_combined_prompt = (
-            f"{system_prompt}\n\n{base_user_prompt}{current_summaries_text}{summary_text}\n"
-            f"Ground your answer based on the context above."
-        )
+        candidate_summary = f"--- Chart #{cand.rank} ---\n{cand.build_summary()}\n\n"
+        test_summaries = current_summaries_text + candidate_summary
 
-        tokens = count_tokens(candidate_combined_prompt)
+        _, test_full_prompt = _format_full_prompt(system_prompt, base_user_prompt, test_summaries)
+        tokens = count_tokens(test_full_prompt)
 
         if tokens <= token_budget or len(selected) == 0:
-            # Include candidate (always include at least top-1 even if tight)
             selected.append(cand)
-            current_summaries_text += summary_text
+            current_summaries_text = test_summaries
         else:
             dropped.append(cand)
 
-    final_user_prompt = (
-        f"{base_user_prompt}{current_summaries_text}\n"
-        f"Provide a clear, grounded answer to the query based on the chart context above."
+    final_user_prompt, final_full_prompt = _format_full_prompt(
+        system_prompt, base_user_prompt, current_summaries_text
     )
-
-    full_prompt_text = f"SYSTEM:\n{system_prompt}\n\nUSER:\n{final_user_prompt}"
-    total_estimated_tokens = count_tokens(full_prompt_text)
+    total_estimated_tokens = count_tokens(final_full_prompt)
 
     return OptimizedContext(
         query=query,
@@ -97,19 +101,7 @@ def pack_context_within_budget(
         dropped_candidates=dropped,
         system_prompt=system_prompt,
         user_prompt=final_user_prompt,
-        full_prompt_text=full_prompt_text,
+        full_prompt_text=final_full_prompt,
         estimated_tokens=total_estimated_tokens,
         token_budget=token_budget,
     )
-
-
-if __name__ == "__main__":
-    from app.core.fusion import run_fusion_pipeline
-
-    cands = run_fusion_pipeline("What is the return rate for each product category?", top_k=5)
-    opt = pack_context_within_budget("What is the return rate for each product category?", cands, token_budget=350)
-
-    print(f"Token Budget: {opt.token_budget}")
-    print(f"Estimated Tokens: {opt.estimated_tokens} ({opt.utilization_pct}% utilization)")
-    print(f"Selected Chart Count: {len(opt.selected_candidates)}")
-    print(f"Dropped Chart Count: {len(opt.dropped_candidates)}")
