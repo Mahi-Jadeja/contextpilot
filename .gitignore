@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+
+# Never commit real API keys
+.streamlit/secrets.toml
+
+# Large / local-only assets
+data/charts/
+data/precomputed/
+data/raw/
+models/
+
+# OS junk
+.DS_Store
+Thumbs.db
