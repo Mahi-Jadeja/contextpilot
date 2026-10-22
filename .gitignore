@@ -9,7 +9,6 @@ venv/
 .streamlit/secrets.toml
 
 # Large / local-only assets
-data/charts/
 data/precomputed/
 data/raw/
 models/
