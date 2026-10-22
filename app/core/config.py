@@ -28,7 +28,7 @@ COL_DESCRIPTION = "description"
 CLIP_MODEL_ID = "openai/clip-vit-base-patch32"
 CLIP_EMBED_DIM = 512
 
-# baselines (Analysis page later)
+# baselines (Analysis page)
 TEXT_BASELINE_ID = "distilbert-base-uncased"
 IMAGE_BASELINE_ID = "mobilenet_v2"
 
@@ -44,7 +44,7 @@ MAX_TOKEN_BUDGET = 2000
 TIKTOKEN_ENCODING = "cl100k_base"
 
 # --- LLM ---
-GROQ_MODEL = "llama-3.1-8b-instant"
+GROQ_MODEL = "qwen/qwen3.8-27b"
 GEMINI_MODEL = "models/gemini-2.5-flash"
 LLM_TEMPERATURE = 0.2
 LLM_MAX_OUTPUT_TOKENS = 512
