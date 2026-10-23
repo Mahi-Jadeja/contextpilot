@@ -1,4 +1,11 @@
+#:schema false
+
 [theme]
+base = "dark"
+primaryColor = "#69D5CB"
+backgroundColor = "#081220"
+secondaryBackgroundColor = "#151F30"
+textColor = "#F8FAFC"
 font = "sans serif"
 
 [server]

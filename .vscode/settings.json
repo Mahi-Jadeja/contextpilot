@@ -1,0 +1,7 @@
+{
+  "evenBetterToml.schema.enabled": false,
+  "evenBetterToml.validation.schema": false,
+  "evenBetterToml.schema.associations": {
+    ".*\\.streamlit/config\\.toml": "disable"
+  }
+}
