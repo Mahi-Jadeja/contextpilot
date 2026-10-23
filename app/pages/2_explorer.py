@@ -1,192 +1,192 @@
-"""
-Query Explorer page for ContextPilot.
-Core demo flow: query → fusion retrieval → token packing → grounded LLM answer.
-"""
+"""ContextPilot — Query Explorer Page."""
 
-import time
+import os
+import sys
+from pathlib import Path
 import streamlit as st
 
-from app.core.config import (
-    DEFAULT_TOP_K,
-    FUSION_WEIGHT_TEXT,
-    DEFAULT_TOKEN_BUDGET,
-    MIN_TOKEN_BUDGET,
-    MAX_TOKEN_BUDGET,
-)
-from app.core.data_loader import get_sample_queries
+# ─── resolve project root ───────────────────────────────────────
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from app.core.fusion import run_fusion_pipeline
 from app.core.token_optimizer import pack_context_within_budget
 from app.core.llm_client import generate_answer
-from app.ui.components import render_chart_card, render_token_bar
-
-
-# ─── PAGE HEADER ─────────────────────────────────────
+from app.ui.components import (
+    render_chart_card,
+    render_token_bar,
+    render_pill
+)
 
 st.markdown("""
-<div style="margin-bottom: 1.5rem;">
-    <div style="font-size: 0.82rem; font-weight: 600; color: #69D5CB; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.2rem;">
-        Multimodal Context Fusion
-    </div>
-    <h2 style="font-size: 1.8rem; font-weight: 700; color: #F8FAFC; margin: 0 0 0.4rem 0;">
-        Query Explorer
-    </h2>
-    <p style="font-size: 0.95rem; color: #94A3B8; margin: 0;">
-        Ask a business question to retrieve chart contexts, pack evidence under a token budget, and generate a grounded AI insight.
+<div style="margin-bottom: 20px;">
+    <h1 style="margin: 0; font-size: 2rem;">🔍 Multi-Modal Context Fusion Explorer</h1>
+    <p style="color: #8A99AD; margin-top: 5px;">
+        Search financial charts, adjust hybrid ranking weights in real time, pack token budget, and observe grounded LLM reasoning.
     </p>
 </div>
 """, unsafe_allow_html=True)
 
-
-# ─── SIDEBAR CONTROLS ────────────────────────────────
-
-with st.sidebar:
-    st.markdown("<div style='font-size: 0.9rem; font-weight: 600; color: #F8FAFC; margin-bottom: 0.5rem;'>Fusion & Budget Controls</div>", unsafe_allow_html=True)
-
-    top_k = st.slider("Top-K Candidates", 1, 10, DEFAULT_TOP_K, step=1)
-    token_budget = st.slider("Token Budget", MIN_TOKEN_BUDGET, MAX_TOKEN_BUDGET, DEFAULT_TOKEN_BUDGET, step=50)
-
-    st.markdown("<div style='font-size: 0.85rem; color: #CBD5E1; margin-top: 0.8rem;'>Embedding Weights</div>", unsafe_allow_html=True)
-    w_text = st.slider("Text Similarity Weight", 0.0, 1.0, FUSION_WEIGHT_TEXT, step=0.05)
-    # vision weight is the complement so weights always sum to 1
-    w_vision = round(1.0 - w_text, 2)
-    st.caption(f"Vision Weight (auto): {w_vision}")
-
-
-# ─── QUERY INPUT ─────────────────────────────────────
-
-samples = get_sample_queries(limit=5)
-# key is query_text (confirmed against data_loader output)
-sample_queries = [s["query_text"] for s in samples] if samples else [
-    "How has total order revenue trended over the last 18 months?",
-    "What is the return rate across product categories?",
-    "Compare prepaid vs COD sales across regions.",
-    "Which seller category generates the highest average rating?",
-    "Show the distribution of customer orders by payment method.",
+# ─── 5 Curated Showcase Queries ─────────────────────────────────
+CURATED_QUERIES = [
+    {
+        "label": "💰 Category Revenue",
+        "query": "Which product category generates the most revenue?"
+    },
+    {
+        "label": "📦 Return Rate",
+        "query": "What is the return rate for each product category?"
+    },
+    {
+        "label": "📈 Revenue Trend",
+        "query": "What is the weekly revenue trend over time?"
+    },
+    {
+        "label": "📊 Sub-Category Volume",
+        "query": "Which sub-categories have the highest order volume?"
+    },
+    {
+        "label": "📅 Monthly Category Drift",
+        "query": "How has order volume changed per category over months?"
+    }
 ]
 
-# chips write straight into the widget's own state key —
-# a keyed widget ignores any other session variable
-if "query_text_area" not in st.session_state:
-    st.session_state.query_text_area = sample_queries[0]
+# ─── Sidebar Controls ───────────────────────────────────────────
+with st.sidebar:
+    st.markdown("### 🎛️ Pipeline Settings")
+    top_k = st.slider("Top-K Candidates", min_value=1, max_value=10, value=4, step=1)
+    token_budget = st.slider("Token Budget Limit", min_value=100, max_value=1000, value=500, step=50)
 
-st.markdown("<div style='font-size: 0.85rem; font-weight: 500; color: #CBD5E1; margin-bottom: 0.4rem;'>Showcase queries:</div>", unsafe_allow_html=True)
-chip_cols = st.columns(len(sample_queries))
-for idx, q_text in enumerate(sample_queries):
+    st.markdown("---")
+    st.markdown("### ⚖️ Fusion Weights")
+    alpha_weight = st.slider("Text Weight (α)", min_value=0.0, max_value=1.0, value=0.55, step=0.05)
+    beta_weight = round(1.0 - alpha_weight, 2)
+    st.caption(f"Vision Weight (β): **{beta_weight}**")
+
+# ─── Query Input & Suggestion Chips ─────────────────────────────
+if "query_input" not in st.session_state:
+    st.session_state.query_input = CURATED_QUERIES[0]["query"]
+
+st.markdown("##### 💡 Curated Analytical Showcase Queries")
+chip_cols = st.columns(5)
+
+def set_selected_query(q_text: str):
+    st.session_state.query_input = q_text
+
+for idx, item in enumerate(CURATED_QUERIES):
     with chip_cols[idx]:
-        if st.button(f"Q{idx + 1}", key=f"chip_{idx}", use_container_width=True, help=q_text):
-            st.session_state.query_text_area = q_text
+        st.button(
+            item["label"],
+            key=f"chip_{idx}",
+            help=item["query"],
+            width="stretch",
+            on_click=set_selected_query,
+            args=(item["query"],)
+        )
 
 user_query = st.text_area(
-    "Enter your business question:",
-    height=80,
-    placeholder="e.g. Show quarterly revenue growth by product line...",
-    key="query_text_area",
+    "Enter Financial Query:",
+    key="query_input",
+    height=80
 )
 
-run_search = st.button("🚀 Retrieve Context & Generate Answer", type="primary")
+col_btn, _ = st.columns([1, 3])
+with col_btn:
+    run_pressed = st.button("🚀 Run Fusion Pipeline", type="primary", width="stretch")
 
-
-# ─── PIPELINE — runs only on explicit button press ────
-
-if run_search:
-    query_to_process = user_query.strip()
-
-    if not query_to_process:
-        st.warning("⚠️ Enter a query or pick a showcase query above.")
+# ─── Pipeline Execution ────────────────────────────────────────
+if run_pressed or st.session_state.get("has_run_explorer", False):
+    if not user_query or not user_query.strip():
+        st.warning("⚠️ Please enter a query or select a showcase query above before running.")
     else:
-        with st.spinner("Encoding query, running fusion search..."):
-            t0 = time.perf_counter()
+        st.session_state.has_run_explorer = True
+
+        with st.spinner("Executing hybrid retrieval, vision scoring, dynamic fusion, and context packing..."):
             fused_candidates = run_fusion_pipeline(
-                query=query_to_process,
+                query=user_query.strip(),
                 top_k=top_k,
-                w_text=w_text,
-                w_vision=w_vision,
+                w_text=alpha_weight,
+                w_vision=beta_weight
             )
-            retrieval_ms = (time.perf_counter() - t0) * 1000
 
             opt_context = pack_context_within_budget(
-                query=query_to_process,
+                query=user_query.strip(),
                 candidates=fused_candidates,
-                budget=token_budget,
+                token_budget=token_budget
             )
 
-            llm_resp = generate_answer(opt_context)
+            llm_response = generate_answer(opt_context)
 
-        # stash results + the settings that produced them
-        st.session_state.last_fused = fused_candidates
-        st.session_state.last_opt = opt_context
-        st.session_state.last_llm = llm_resp
-        st.session_state.retrieval_ms = retrieval_ms
-        st.session_state.last_settings = (top_k, token_budget, w_text)
+        st.markdown("---")
 
-# honest stale signal instead of silently old results
-if "last_settings" in st.session_state:
-    if st.session_state.last_settings != (top_k, token_budget, w_text):
-        st.caption("⚙️ Settings changed since last run — press Retrieve to apply.")
+        # 2-column layout: Left = Retrieved Charts, Right = Token Budget & LLM Answer
+        left_col, right_col = st.columns([1, 1], gap="large")
 
+        packed_filenames = [c.record.filename for c in opt_context.selected_candidates]
 
-# ─── RESULTS ─────────────────────────────────────────
+        with left_col:
+            st.markdown("### 📊 Retrieved & Ranked Context Charts")
+            st.caption(f"Showing Top-{len(fused_candidates)} retrieved visual context pairs (Ranked by Fused Score)")
 
-if "last_fused" in st.session_state:
-    fused_candidates = st.session_state.last_fused
-    opt_context = st.session_state.last_opt
-    llm_resp = st.session_state.last_llm
-    retrieval_ms = st.session_state.retrieval_ms
+            for candidate in fused_candidates:
+                is_packed = candidate.record.filename in packed_filenames
+                render_chart_card(candidate=candidate, is_packed=is_packed)
 
-    st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
+        with right_col:
+            st.markdown("### ⚡ Dynamic Token Budget & LLM Response")
 
-    col_results, col_llm = st.columns([1.1, 1], gap="large")
+            # Token usage visual bar
+            render_token_bar(
+                used=opt_context.estimated_tokens,
+                budget=token_budget,
+                pruned_count=len(opt_context.dropped_candidates)
+            )
 
-    # LEFT — retrieved chart cards
-    with col_results:
-        st.markdown(f"""
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
-            <div class="custom-card-title">Top Retrieved Chart Contexts ({len(fused_candidates)})</div>
-            <span class="mono" style="font-size: 0.8rem; color: #69D5CB;">Retrieval: {retrieval_ms:.1f} ms</span>
-        </div>
-        """, unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
 
-        for cand in fused_candidates:
-            render_chart_card(cand, rank=cand.rank)
+            # Selected vs Dropped summary
+            st.markdown("**Context Selection Breakdown:**")
+            pill_cols = st.columns(2)
+            with pill_cols[0]:
+                st.caption("Included Charts:")
+                for sc in opt_context.selected_candidates:
+                    st.markdown(render_pill(f"✓ {sc.record.filename}", "success"), unsafe_allow_html=True)
+            with pill_cols[1]:
+                st.caption("Pruned Charts:")
+                if opt_context.dropped_candidates:
+                    for dc in opt_context.dropped_candidates:
+                        st.markdown(render_pill(f"✗ {dc.record.filename}", "danger"), unsafe_allow_html=True)
+                else:
+                    st.caption("_None (All fit in budget)_")
 
-    # RIGHT — token budget + LLM answer
-    with col_llm:
-        st.markdown('<div class="custom-card-title" style="margin-bottom: 0.8rem;">Token Budget & LLM Answer</div>', unsafe_allow_html=True)
+            st.markdown("<br>", unsafe_allow_html=True)
 
-        st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-        render_token_bar(opt_context.estimated_tokens, token_budget)
-        st.markdown(f"""
-        <div style="font-size: 0.82rem; color: #94A3B8; margin-top: 0.4rem;">
-            Selected: <strong style="color: #22C55E;">{len(opt_context.selected_candidates)} charts</strong> &nbsp;|&nbsp;
-            Pruned: <strong style="color: #EF4444;">{len(opt_context.dropped_candidates)} charts</strong>
-        </div>
-        """, unsafe_allow_html=True)
-        st.markdown('</div>', unsafe_allow_html=True)
+            # Grounded LLM Response Box
+            st.markdown("#### 🤖 Grounded Insight (Groq / Gemini)")
 
-        st.markdown('<div class="custom-card">', unsafe_allow_html=True)
+            latency_sec = llm_response.latency_ms / 1000.0 if llm_response.latency_ms else 0.0
+            provider_badge = f"**Provider:** `{llm_response.provider.upper()}` | **Model:** `{llm_response.model}` | **Latency:** `{latency_sec:.2f}s`"
+            st.caption(provider_badge)
 
-        # teal for groq, periwinkle for gemini, amber for mock
-        prov_color = {"groq": "#69D5CB", "gemini": "#A7B4FF"}.get(llm_resp.provider, "#F59E0B")
-        st.markdown(f"""
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
-            <span style="font-size: 0.85rem; font-weight: 600; color: #F8FAFC;">AI Grounded Insight</span>
-            <span class="pill mono" style="background-color: rgba(105,213,203,0.15); color: {prov_color}; border: 1px solid {prov_color};">
-                {llm_resp.provider.upper()} · {llm_resp.latency_ms:.0f} ms
-            </span>
-        </div>
-        <div class="mono" style="font-size: 0.78rem; color: #64748B; margin-bottom: 0.8rem;">
-            {llm_resp.model} · tokens in/out: {llm_resp.input_tokens}/{llm_resp.output_tokens}
-        </div>
-        """, unsafe_allow_html=True)
+            if llm_response.error_message:
+                st.error(f"Inference Warning: {llm_response.error_message}")
 
-        # mock responses carry an explanation in error_message — show as info, not error
-        if llm_resp.provider == "mock":
-            st.info(llm_resp.answer)
-        else:
-            st.markdown(f"""
-            <div style="font-size: 0.92rem; color: #F8FAFC; line-height: 1.6; background-color: #0A0E20; padding: 1rem; border-radius: 8px; border: 1px solid #1E2A44;">
-                {llm_resp.answer}
-            </div>
-            """, unsafe_allow_html=True)
-
-        st.markdown('</div>', unsafe_allow_html=True)
+            st.markdown(
+                f"""
+                <div style="
+                    background: #151F30;
+                    border: 1px solid rgba(105, 213, 203, 0.3);
+                    border-radius: 8px;
+                    padding: 18px;
+                    font-size: 0.95rem;
+                    line-height: 1.6;
+                    color: #E2E8F0;
+                    margin-top: 10px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                ">
+                    {llm_response.answer}
+                </div>
+                """,
+                unsafe_allow_html=True
+            )

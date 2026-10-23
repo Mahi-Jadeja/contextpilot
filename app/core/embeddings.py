@@ -4,7 +4,13 @@ Provides dual text and vision embedding generation mapped into a shared 512-d sp
 Configured with single-threaded execution env flags for macOS stability.
 """
 import os
-# Force single-thread execution to prevent macOS OpenMP/FAISS thread segfaults
+import warnings
+
+# Suppress HuggingFace, PyTorch, and Python environmental noise
+warnings.filterwarnings("ignore")
+os.environ["PYTHONWARNINGS"] = "ignore"
+os.environ["HF_HUB_DISABLE_SYMLINKS_WARNING"] = "1"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
 os.environ["OPENBLAS_NUM_THREADS"] = "1"
@@ -17,11 +23,13 @@ from typing import List, Union
 import numpy as np
 import torch
 from PIL import Image
-from transformers import CLIPModel, CLIPProcessor
+from transformers import CLIPModel, CLIPProcessor, logging as transformers_logging
+
+# Suppress HuggingFace verbosity
+transformers_logging.set_verbosity_error()
 
 from app.core.config import CLIP_EMBED_DIM, CLIP_MODEL_ID
 
-# Set torch threads to single-threaded for stability
 torch.set_num_threads(1)
 
 _MODEL = None

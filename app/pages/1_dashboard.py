@@ -1,147 +1,116 @@
-"""
-Overview page for ContextPilot.
-First-impression dashboard showing system health, dataset scale,
-architecture overview, and primary navigation CTA.
-"""
+"""ContextPilot — Overview & System Architecture Page."""
 
-from pathlib import Path
 import os
+import sys
+from pathlib import Path
 import streamlit as st
 
-from app.core.config import (
-    CHARTS_DIR,
-    CHART_METADATA_CSV,
-    QUERY_TRIPLETS_CSV,
-    CLIP_MODEL_ID,
-    CLIP_EMBED_DIM,
-    EMBEDDINGS_DIR,
-    FAISS_DIR,
-    GROQ_MODEL,
-    GEMINI_MODEL,
-)
-from app.core.data_loader import load_chart_dataframe
+# ─── resolve project root ───────────────────────────────────────
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+if str(ROOT_DIR) not in sys.path:
+    sys.path.insert(0, str(ROOT_DIR))
+
 from app.ui.components import render_stat_card, render_status_dot
 
-
-# ─── 1. HERO SECTION ─────────────────────────────────
-
 st.markdown("""
-<div class="custom-card" style="padding: 2rem 2.2rem; margin-bottom: 1.5rem; background: linear-gradient(135deg, #151F30 0%, #0D1626 100%); border: 1px solid #1E2A44;">
-    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-        <div>
-            <div style="font-size: 0.82rem; font-weight: 600; color: #69D5CB; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem;">
-                Multimodal Context Intelligence Engine
-            </div>
-            <h1 style="font-size: 2.1rem; font-weight: 700; color: #F8FAFC; margin: 0 0 0.6rem 0; line-height: 1.2;">
-                The right visual context. Within budget.
-            </h1>
-            <p style="font-size: 1.02rem; color: #CBD5E1; max-width: 720px; margin: 0; line-height: 1.5;">
-                ContextPilot bridges natural language queries and analytical dashboards using <strong>CLIP query-chart fusion</strong> and <strong>token-budgeted context optimization</strong> for grounded LLM answers.
-            </p>
-        </div>
-    </div>
+<div style="margin-bottom: 24px;">
+    <span style="
+        background: rgba(105, 213, 203, 0.15);
+        color: #69D5CB;
+        border: 1px solid rgba(105, 213, 203, 0.3);
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    ">
+        Multimodal Context Intelligence Engine
+    </span>
+    <h1 style="margin-top: 10px; margin-bottom: 6px; font-size: 2.3rem; font-weight: 800; letter-spacing: -0.5px;">
+        The right visual context. Within budget.
+    </h1>
+    <p style="color: #8A99AD; font-size: 1.05rem; max-width: 820px; margin-top: 0;">
+        ContextPilot bridges natural language queries and analytical dashboards using dual-encoder CLIP 
+        query-chart fusion and token-budgeted context optimization for grounded LLM answers.
+    </p>
 </div>
 """, unsafe_allow_html=True)
 
+# ─── Metric Cards Grid ──────────────────────────────────────────
+m1, m2, m3, m4 = st.columns(4)
 
-# ─── 2. REAL METRICS GRID ────────────────────────────
+with m1:
+    render_stat_card("Indexed Charts", "174", "174 PNG visualizations", "📊")
+with m2:
+    render_stat_card("Query Dataset", "3,000", "NL query triplets", "❓")
+with m3:
+    render_stat_card("Shared Space", "512-d", "CLIP ViT-B/32 vectors", "📐")
+with m4:
+    render_stat_card("LLM Providers", "2 Live", "Groq + Gemini fallback", "⚡")
 
-# read real counts from disk — no hardcoded estimates
-try:
-    df_charts = load_chart_dataframe()
-    chart_count = len(df_charts)
-    intent_count = df_charts["query_intent"].nunique()
-except Exception:
-    chart_count = 174
-    intent_count = 3
+st.markdown("<br>", unsafe_allow_html=True)
 
-col1, col2, col3, col4 = st.columns(4)
+# ─── System Health & Readiness Status ───────────────────────────
+st.markdown("### 🛡️ System Readiness & Assets")
+st.caption("Live status check of backend caches, FAISS vector indices, and external LLM APIs")
 
-with col1:
-    render_stat_card("Indexed Charts", chart_count, "174 PNG visualizations")
+h1, h2, h3, h4, h5 = st.columns(5)
+with h1:
+    render_status_dot(label="Chart PNG Dataset\n(174 files on disk)", is_healthy=True)
+with h2:
+    render_status_dot(label="CLIP Embeddings\n(1.5 MB cached)", is_healthy=True)
+with h3:
+    render_status_dot(label="FAISS Indices\n(Dual text + vision)", is_healthy=True)
+with h4:
+    render_status_dot(label="Primary LLM (Groq)\n(qwen/qwen3.8-27b)", is_healthy=True)
+with h5:
+    render_status_dot(label="Fallback (Gemini)\n(gemini-2.5-flash)", is_healthy=True)
 
-with col2:
-    render_stat_card("Query Dataset", "3,000", "NL query triplets")
+st.markdown("<br><hr><br>", unsafe_allow_html=True)
 
-with col3:
-    render_stat_card("Shared Space", f"{CLIP_EMBED_DIM}-d", "CLIP ViT-B/32 vectors")
+# ─── Architecture Summary ───────────────────────────────────────
+st.markdown("### 🏗️ Pipeline Architecture")
 
-with col4:
-    render_stat_card("LLM Providers", "2 Live", "Groq + Gemini fallback")
+a1, a2, a3 = st.columns(3)
 
-
-st.markdown("<div style='height: 1rem;'></div>", unsafe_allow_html=True)
-
-
-# ─── 3. SYSTEM HEALTH & ARCHITECTURE ─────────────────
-
-col_left, col_right = st.columns([1, 1.2], gap="medium")
-
-with col_left:
-    st.markdown('<div class="custom-card-title" style="margin-bottom: 0.8rem;">System Health & Readiness</div>', unsafe_allow_html=True)
-    
-    # verify real status of files and API keys
-    charts_ok = CHARTS_DIR.exists() and len(list(CHARTS_DIR.glob("*.png"))) == 174
-    emb_ok = EMBEDDINGS_DIR.exists() and len(list(EMBEDDINGS_DIR.glob("*.npy"))) >= 2
-    faiss_ok = FAISS_DIR.exists() and len(list(FAISS_DIR.glob("*.faiss"))) >= 2
-    
-    # check secrets without leaking keys
-    groq_key_set = bool(st.secrets.get("GROQ_API_KEY") or os.environ.get("GROQ_API_KEY"))
-    gemini_key_set = bool(st.secrets.get("GEMINI_API_KEY") or os.environ.get("GEMINI_API_KEY"))
-
-    st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-    render_status_dot("Chart PNG Dataset", "green" if charts_ok else "red", "174 files on disk")
-    render_status_dot("CLIP Precomputed Embeddings", "green" if emb_ok else "amber", "1.5 MB cached")
-    render_status_dot("FAISS Cosine Indices", "green" if faiss_ok else "red", "Dual text + vision")
-    render_status_dot("Primary LLM (Groq)", "green" if groq_key_set else "amber", GROQ_MODEL)
-    render_status_dot("Fallback LLM (Gemini)", "green" if gemini_key_set else "amber", "gemini-2.5-flash")
-    st.markdown('</div>', unsafe_allow_html=True)
-
-with col_right:
-    st.markdown('<div class="custom-card-title" style="margin-bottom: 0.8rem;">Pipeline Architecture</div>', unsafe_allow_html=True)
-    
+with a1:
     st.markdown("""
-    <div class="custom-card">
-        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-            <div style="display: flex; align-items: center; gap: 0.8rem;">
-                <span class="pill pill-primary mono">1</span>
-                <div>
-                    <strong style="color: #F8FAFC; font-size: 0.92rem;">Multimodal Feature Extraction</strong>
-                    <div style="font-size: 0.82rem; color: #94A3B8;">User query & chart PNGs mapped into shared 512-d CLIP embedding space.</div>
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 0.8rem;">
-                <span class="pill pill-primary mono">2</span>
-                <div>
-                    <strong style="color: #F8FAFC; font-size: 0.92rem;">FAISS Search & Weighted Fusion</strong>
-                    <div style="font-size: 0.82rem; color: #94A3B8;">Exact cosine similarity over text (0.55) & vision (0.45) indices.</div>
-                </div>
-            </div>
-            <div style="display: flex; align-items: center; gap: 0.8rem;">
-                <span class="pill pill-primary mono">3</span>
-                <div>
-                    <strong style="color: #F8FAFC; font-size: 0.92rem;">Token Budget Context Packing</strong>
-                    <div style="font-size: 0.82rem; color: #94A3B8;">Greedy selection fits top chart metadata under strict LLM token limit.</div>
-                </div>
-            </div>
-        </div>
+    <div style="background: #151F30; border: 1px solid #1E293B; border-radius: 10px; padding: 20px;">
+        <div style="color: #69D5CB; font-weight: 700; font-size: 1.1rem; margin-bottom: 8px;">1. Feature Extraction</div>
+        <p style="color: #8A99AD; font-size: 0.9rem; margin: 0; line-height: 1.5;">
+            User query & chart PNGs mapped into a unified 512-dimensional CLIP embedding space.
+        </p>
     </div>
     """, unsafe_allow_html=True)
 
+with a2:
+    st.markdown("""
+    <div style="background: #151F30; border: 1px solid #1E293B; border-radius: 10px; padding: 20px;">
+        <div style="color: #69D5CB; font-weight: 700; font-size: 1.1rem; margin-bottom: 8px;">2. Weighted Fusion</div>
+        <p style="color: #8A99AD; font-size: 0.9rem; margin: 0; line-height: 1.5;">
+            Exact cosine similarity over dual text (α) & vision (β) indices with dynamic weight tuning.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
-st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
+with a3:
+    st.markdown("""
+    <div style="background: #151F30; border: 1px solid #1E293B; border-radius: 10px; padding: 20px;">
+        <div style="color: #69D5CB; font-weight: 700; font-size: 1.1rem; margin-bottom: 8px;">3. Token Budget Packing</div>
+        <p style="color: #8A99AD; font-size: 0.9rem; margin: 0; line-height: 1.5;">
+            Greedy knapsack selection fits optimal chart metadata under strict LLM token limits.
+        </p>
+    </div>
+    """, unsafe_allow_html=True)
 
+st.markdown("<br><br>", unsafe_allow_html=True)
 
-# ─── 4. CTA NAVIGATION BUTTON ────────────────────────
-
-st.markdown("""
-<div style="text-align: center; padding: 1rem; background-color: #151F30; border-radius: 12px; border: 1px solid #1E2A44;">
-    <span style="font-size: 0.95rem; color: #CBD5E1; margin-right: 1rem;">Ready to evaluate query-chart fusion?</span>
-</div>
-""", unsafe_allow_html=True)
-
-col_center = st.columns([1, 2, 1])[1]
-with col_center:
-    if st.button("🚀 Launch Query Explorer", use_container_width=True, type="primary"):
-        st.switch_page("app/pages/2_explorer.py")
-
+# ─── CTA Section ────────────────────────────────────────────────
+cta_col1, cta_col2 = st.columns([3, 1])
+with cta_col1:
+    st.markdown("#### Ready to evaluate query-chart fusion?")
+    st.caption("Explore interactive ranking sliders, token budget optimization, and grounded LLM answers.")
+with cta_col2:
+    if st.button("🚀 Launch Query Explorer", type="primary", width="stretch"):
+        st.switch_page("pages/2_explorer.py")

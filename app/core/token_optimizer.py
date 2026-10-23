@@ -42,12 +42,15 @@ def count_tokens(text: str, encoding_name: str = TIKTOKEN_ENCODING) -> int:
 
 def build_system_prompt() -> str:
     return (
-        "You are ContextPilot, an expert AI context assistant for enterprise analytics.\n"
-        "Your task is to answer the user's business query using ONLY the retrieved chart context summaries provided below.\n"
-        "Guidelines:\n"
-        "1. Reference specific chart IDs and chart types in your response.\n"
-        "2. Keep your answer factual, precise, and directly grounded in the provided chart contexts.\n"
-        "3. If context is insufficient, state what additional data table would be required."
+        "You are ContextPilot, an Executive Financial Analyst AI.\n"
+        "Your task is to analyze the user's query using ONLY the retrieved visual chart summaries provided.\n\n"
+        "Output Requirements:\n"
+        "1. Currency: Express all financial figures in Indian Rupees (₹).\n"
+        "2. Executive Overview: State the core finding in 1-2 clear sentences with key metrics upfront.\n"
+        "3. Data Breakdown: Present category/trend figures cleanly using bullet points.\n"
+        "4. Supporting Evidence: Reference the specific supporting chart ID (e.g., `bar_analytical_6a7a3a8f`).\n"
+        "5. Business Recommendation: Conclude with 1 actionable takeaway.\n\n"
+        "Keep text clean, professional, well-formatted, and completely grounded in the provided numbers."
     )
 
 
@@ -55,7 +58,7 @@ def _format_full_prompt(system_prompt: str, base_user_prompt: str, summaries_tex
     """Helper to format user_prompt and full_prompt_text identically."""
     user_prompt = (
         f"{base_user_prompt}{summaries_text}\n"
-        f"Provide a clear, grounded answer to the query based on the chart context above."
+        f"Provide an executive analytical answer in Indian Rupees (₹) based on the chart context above."
     )
     full_prompt_text = f"SYSTEM:\n{system_prompt}\n\nUSER:\n{user_prompt}"
     return user_prompt, full_prompt_text
